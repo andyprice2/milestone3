@@ -1,0 +1,34 @@
+---
+title: "Milestone 3"
+author: "Andy Price"
+date: "10/4/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+I got the raw data in this repo from two sources: the first is baseball savant,
+which is the website where Major League Baseball's Statcast data is stored.
+Statcast, which is a relatively new technology, captures the exit velocity of
+baseballs as they leave the bat, as well as the launch angle, distances
+traveled, and launch direction of balls hit in play. Statcast was first
+implemented on a league-wide basis in 2015, so the data covers every game from
+2015 to today. It is sorted by player, showing every player's physical stats
+over that timeframe, listing, for example, a player's average exit velocity over
+that time. The other is data from fangraphs, limited to the same time period
+(2015-2019). This contains data about the actual outcomes (how many home runs
+did a player hit over that time frame? What was their batting average?) These
+types of data (outcomes vs statcast) are both used to predict future player
+performance, but are rarely used together. I plan on modeling future player
+performance using BOTH elements. First, I'll have to join the two datasets,
+using an inner_join. The fangraphs data is smaller, because it's limited to
+players with a certain number of plate appearances (3.1 per team game), so I'll
+have to filter the statcast data down to a similar size. Then I can graph the
+statcast data to get a better sense of how much diversity there is in player
+exit velocities, average distance, etc. One of the reasons I chose statcast is
+that since it corresponds to actual physical metrics (distances and speeds), it
+lends itself to visualization; for example, I can map every players age on an
+outline of a major league baseball field, giving an intuitive sense of where
+players are hitting.
