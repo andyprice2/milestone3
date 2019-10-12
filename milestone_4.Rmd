@@ -8,20 +8,40 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(janitor)
 ```
 
-```{r}
-fangraphs <- read.csv("fangraphs_leaderboard_2015-2019.csv")
+```{r, echo = FALSE, warning=FALSE}
 
-summarise(fangraphs)
+# Doing some cleaning and turning walk rate into a numeric (after separating out
+# the percentage sign).
+
+fangraphs <- read.csv("fangraphs_leaderboard_2015-2019.csv") %>% clean_names() %>% separate(bb, into = c("walk_rate", "percentage"), sep = " ")
+
+fangraphs$walk_rate <- as.numeric(fangraphs$walk_rate)
+
+# Creating a column that stores whether a player has hit more than the median
+# number of home runs over the period (2015-2019). Will use this to facet and
+# thus compare walk rates between players who hit a lot of home runs and those
+# who don't.
 
 fangraphs <- fangraphs %>%
-  mutate(top_homer_hitters = ifelse(HR > median(HR), TRUE, FALSE))
+  mutate(top_homer_hitters = ifelse(hr > median(hr), "Players above 50th Percentile in Hitting Home Runs", "Players below 50th Percentile in Hitting Home Runs"))
 
-ggplot(fangraphs, aes(x = BB., group = top_homer)) +
-  geom_density() +
-  facet_wrap(~top_homer_hitters)
-test
+# Graphing a density plot of the walk rates for above-average and below average
+# home run hitters. Add a rug plot so viewer understands that there is a lot but
+# not a ton of data underlying the distribution. Add some labels that give
+# biggest observation (good HR hitters get walked more than bad HR hitters,
+# which I somewhat expected but wasn't sure about).
+
+ggplot(fangraphs, aes(x = walk_rate, group = top_homer_hitters)) +
+  geom_density(fill = "lightpink1") +
+  geom_rug() + 
+  labs(title = "Distribution of MLB Player Walk Rates, 2015-2019",
+       subtitle = "Above-average home run hitters earn more walks than below-average homer hitters",
+       x = "Walk Rate (Percentage of a player's plate appearances that end in walks)",
+       y = "Density") +
+  facet_wrap(~top_homer_hitters, ncol = 1)
 
 ```
 
