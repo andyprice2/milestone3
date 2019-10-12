@@ -21,6 +21,7 @@ fangraphs <- fangraphs %>%
 ggplot(fangraphs, aes(x = BB., group = top_homer)) +
   geom_density() +
   facet_wrap(~top_homer_hitters)
+test
 
 ```
 
