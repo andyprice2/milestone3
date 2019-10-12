@@ -7,6 +7,20 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
-Test test
+```{r}
+fangraphs <- read.csv("fangraphs_leaderboard_2015-2019.csv")
+
+summarise(fangraphs)
+
+fangraphs <- fangraphs %>%
+  mutate(top_homer_hitters = ifelse(HR > median(HR), TRUE, FALSE))
+
+ggplot(fangraphs, aes(x = BB., group = top_homer)) +
+  geom_density() +
+  facet_wrap(~top_homer_hitters)
+
+```
+
